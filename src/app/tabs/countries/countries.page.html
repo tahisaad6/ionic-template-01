@@ -1,0 +1,26 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{'tabs.countries' | translate}}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar [formGroup]="activeRegion" ngxsForm="countries.activeRegion">
+    <ion-segment scrollable formControlName="region">
+      <ion-segment-button *ngFor="let region of regions$ | async" [value]="region">
+        <ion-label>{{region}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" [scrollY]="!(loadingStates$ | async).isLoading">
+  <p *ngIf="(loadingStates$ | async).isFailed">Failed!!!</p>
+
+  <app-countries-card-loading *ngIf="(loadingStates$ | async).isLoading"></app-countries-card-loading>
+
+  <app-countries-card
+    [countries]="countries$ | async"
+    (onActionCard)="onActionCard($event)"
+    (onActionLike)="onActionLike($event)"
+    (onActionShare)="onActionShare($event)"
+    *ngIf="(loadingStates$ | async).isSuccess"
+  ></app-countries-card>
+</ion-content>
